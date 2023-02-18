@@ -1,0 +1,21 @@
+.load-more {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    height: 40px;
+    width: 110px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+
+    &:hover {
+        border-color: rgb(219, 255, 88);
+        background: #e6fd80;
+    }
+}
+
+.load-more.is-hidden {
+    display: none;
+}
