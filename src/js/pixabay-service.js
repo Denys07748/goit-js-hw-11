@@ -7,12 +7,11 @@ export default class PixabayApiService {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
-    this.perPage = 200;
+    this.perPage = 5;
     this.totalHits = 0;
   }
 
   fetchCards() {
-    console.log(this);
     const url = `${BASE_URL}/?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=${this.perPage}`;
 
     return fetch(url)
@@ -24,13 +23,6 @@ export default class PixabayApiService {
         return response.json();
       })
       .then(({ hits, totalHits }) => {
-        if (hits.length === 0) {
-          Notify.failure(
-            'Sorry, there are no images matching your search query. Please try again.'
-          );
-          return;
-        }
-
         this.incrementPage();
         console.log(hits);
         this.totalHits = totalHits;
