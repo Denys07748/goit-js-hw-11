@@ -52,7 +52,9 @@ async function onSearch(e) {
   }
 }
 
-async function onLoadMore() {
+async function onLoadMore(e) {
+  e.preventDefault();
+
   loadMoreBtn.disable();
   if (
     pixabayApiService.page * pixabayApiService.perPage >
