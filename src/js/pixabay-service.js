@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const BASE_URL = 'https://pixabay.com/api';
 const KEY = '29295423-17b569e792d85c50ff51a3d1b';
-const axios = require('axios');
 
 export default class PixabayApiService {
   constructor() {
@@ -13,6 +12,7 @@ export default class PixabayApiService {
   }
 
   async fetchCards() {
+    const axios = require('axios');
     const response = await axios.get(`${BASE_URL}`, {
       params: {
         key: KEY,
