@@ -1,4 +1,4 @@
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import axios from 'axios';
 
 const BASE_URL = 'https://pixabay.com/api';
 const KEY = '29295423-17b569e792d85c50ff51a3d1b';
@@ -11,24 +11,25 @@ export default class PixabayApiService {
     this.totalHits = 0;
   }
 
-  fetchCards() {
-    const url = `${BASE_URL}/?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=${this.perPage}`;
+  async fetchCards() {
+    const response = await axios.get(`${BASE_URL}`, {
+      params: {
+        key: KEY,
+        q: this.searchQuery,
+        image_type: 'photo',
+        orientation: 'horizontal',
+        safesearch: true,
+        page: this.page,
+        per_page: this.perPage,
+      },
+    });
 
-    return fetch(url)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(response.status);
-        }
+    this.incrementPage();
+    this.totalHits = response.data.totalHits;
 
-        return response.json();
-      })
-      .then(({ hits, totalHits }) => {
-        this.incrementPage();
-        console.log(hits);
-        this.totalHits = totalHits;
+    console.log(response.data.hits);
 
-        return hits;
-      });
+    return response.data.hits;
   }
 
   incrementPage() {

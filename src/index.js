@@ -17,10 +17,10 @@ const gallery = lightbox();
 refs.searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.btnEl.addEventListener('click', onLoadMore);
 
-function onSearch(e) {
+async function onSearch(e) {
   e.preventDefault();
 
-  pixabayApiService.query = e.currentTarget.elements.searchQuery.value;
+  pixabayApiService.query = e.currentTarget.elements.searchQuery.value.trim();
 
   if (pixabayApiService.query === '') {
     Notify.warning('The input field cannot be empty.');
@@ -31,28 +31,28 @@ function onSearch(e) {
   loadMoreBtn.disable();
   pixabayApiService.resetPage();
 
-  pixabayApiService
-    .fetchCards()
-    .then(hits => {
-      if (hits.length === 0) {
-        Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-        loadMoreBtn.hide();
-        clearCardsContainer();
-        return;
-      }
-
-      Notify.success(`Hooray! We found ${pixabayApiService.totalHits} images.`);
+  try {
+    const dataHits = await pixabayApiService.fetchCards();
+    if (dataHits.length === 0) {
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      loadMoreBtn.hide();
       clearCardsContainer();
-      renderCards(hits);
-      loadMoreBtn.enable();
-      lightbox();
-    })
-    .catch(error => Notify.failure(`${error}`));
+      return;
+    }
+
+    Notify.success(`Hooray! We found ${pixabayApiService.totalHits} images.`);
+    clearCardsContainer();
+    renderCards(dataHits);
+    loadMoreBtn.enable();
+    lightbox();
+  } catch (error) {
+    Notify.failure(`${error}`);
+  }
 }
 
-function onLoadMore() {
+async function onLoadMore() {
   loadMoreBtn.disable();
   if (
     pixabayApiService.page * pixabayApiService.perPage >
@@ -62,11 +62,15 @@ function onLoadMore() {
     loadMoreBtn.hide();
   }
 
-  pixabayApiService.fetchCards().then(hits => {
-    renderCards(hits);
+  try {
+    const dataHits = await pixabayApiService.fetchCards();
+    renderCards(dataHits);
+    lightbox();
     gallery.refresh();
     loadMoreBtn.enable();
-  });
+  } catch (error) {
+    Notify.failure(`${error}`);
+  }
 }
 
 function lightbox() {
