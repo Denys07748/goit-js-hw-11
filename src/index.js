@@ -46,7 +46,7 @@ async function onSearch(e) {
     clearCardsContainer();
     renderCards(dataHits);
     loadMoreBtn.enable();
-    lightbox();
+    gallery.refresh();
   } catch (error) {
     Notify.failure(`${error}`);
   }
@@ -65,7 +65,6 @@ async function onLoadMore() {
   try {
     const dataHits = await pixabayApiService.fetchCards();
     renderCards(dataHits);
-    lightbox();
     gallery.refresh();
     loadMoreBtn.enable();
   } catch (error) {

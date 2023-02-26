@@ -7,7 +7,7 @@ export default class PixabayApiService {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
-    this.perPage = 5;
+    this.perPage = 40;
     this.totalHits = 0;
   }
 
@@ -26,8 +26,6 @@ export default class PixabayApiService {
 
     this.incrementPage();
     this.totalHits = response.data.totalHits;
-
-    console.log(response.data.hits);
 
     return response.data.hits;
   }
